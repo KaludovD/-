@@ -3,170 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>За Деница ❤️</title>
+<title>За моето Слънце ❤️</title>
 <style>
-    :root { --p: #ff0080; --s: #ff66cc; }
+    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; }
     
     body, html { 
-        margin: 0; padding: 0; width: 100%; height: 100%; 
+        margin: 0; padding: 0; width: 100%; height: 100dvh; 
         overflow: hidden; background: #000; 
         font-family: -apple-system, system-ui, sans-serif;
-        touch-action: none; /* Предотвратява зумване при бързо цъкане */
+        touch-action: none; transition: background 2s ease;
     }
 
-    #canvas-container {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
-        background: radial-gradient(circle at center, #1a001a 0%, #000 100%);
-        z-index: -1;
+    /* Фон и частици */
+    #bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+    .particle { position: absolute; pointer-events: none; z-index: 50; }
+
+    /* Насоки */
+    #instruction {
+        position: absolute; top: 15%; width: 100%; text-align: center;
+        color: white; font-size: 20px; font-weight: 300; letter-spacing: 2px;
+        z-index: 100; text-shadow: 0 0 10px var(--p);
+        animation: breath 2s infinite;
     }
 
-    /* Главният бутон */
-    #heartBtn {
-        position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
-        font-size: 110px; border: none; background: none; cursor: pointer;
-        filter: drop-shadow(0 0 25px var(--p)); z-index: 100;
-        -webkit-tap-highlight-color: transparent;
-        animation: heartPulse 1.5s infinite ease-in-out;
+    /* Обекти */
+    .game-obj {
+        position: absolute; transform: translate(-50%, -50%);
+        cursor: pointer; border: none; background: none;
+        -webkit-tap-highlight-color: transparent; transition: all 0.5s ease;
     }
 
-    @keyframes heartPulse { 
-        0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 20px var(--p)); }
-        50% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 40px var(--s)); }
+    #mainHeart { top: 50%; left: 50%; font-size: 100px; animation: beat 1.2s infinite; }
+    .teddy { bottom: -150px; font-size: 80px; display: none; }
+    #flower { top: 50%; left: 50%; font-size: 90px; display: none; transform: translate(-50%, -50%) scale(0); }
+
+    /* Финален надпис */
+    #finalMsg {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+        width: 100%; text-align: center; display: none;
+        font-size: 45px; font-weight: 900; z-index: 200;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--p), #fff);
+        background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    /* Текстът на Деница */
-    #message {
-        position: absolute; top: 55%; width: 100%; text-align: center;
-        font-size: 35px; font-weight: 900; opacity: 0;
-        background: linear-gradient(to right, #fff, var(--s), var(--p), #fff);
-        background-size: 200% auto;
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        transition: 1.5s ease; z-index: 110; pointer-events: none;
-        text-shadow: 0 0 15px rgba(255,102,204,0.3);
-    }
+    /* Анимации */
+    @keyframes beat { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.15); } }
+    @keyframes breath { from { opacity: 0.4; } to { opacity: 1; } }
+    @keyframes rainbow { to { background-position: 200% center; } }
+    @keyframes infiniteRotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-    .teddy { position: absolute; bottom: -120px; font-size: 90px; transition: 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10; }
-    
-    /* Стилизация за частиците */
-    .particle {
-        position: absolute; pointer-events: none; z-index: 200;
-    }
+    .infinite-glow { animation: rainbow 3s linear infinite, glowPulse 2s infinite alternate; }
+    @keyframes glowPulse { from { filter: drop-shadow(0 0 10px var(--p)); } to { filter: drop-shadow(0 0 30px var(--s)); } }
 
-    #hint {
-        color: white; text-align: center; width: 100%; position: absolute;
-        top: 15%; font-size: 20px; font-weight: 300; letter-spacing: 2px;
-        animation: fadeOut 2s infinite alternate;
-    }
-    @keyframes fadeOut { from { opacity: 0.3; } to { opacity: 0.8; } }
 </style>
 </head>
 <body>
 
-<div id="canvas-container"></div>
-<h2 id="hint">ДОКОСНИ ЕКРАНА ✨</h2>
-<button id="heartBtn">❤️</button>
-<div id="message">ОБИЧАМ ТЕ, ДЕНИЦА! 💖</div>
+<div id="bg"></div>
+<div id="instruction">ДОКОСНИ СЪРЦЕТО, ЗА ДА ЗАПОЧНЕМ...</div>
+
+<button id="mainHeart" class="game-obj">❤️</button>
+<button id="teddyL" class="game-obj teddy" style="left: 25%;">🧸</button>
+<button id="teddyR" class="game-obj teddy" style="left: 75%;">🧸</button>
+<button id="flower" class="game-obj">🌹</button>
+
+<div id="finalMsg">ОБИЧАМ ТЕ, СЛЪНЦЕ! 💖</div>
 
 <script>
-    const btn = document.getElementById('heartBtn');
-    const msg = document.getElementById('message');
-    const hint = document.getElementById('hint');
-    const container = document.getElementById('canvas-container');
+    const instr = document.getElementById('instruction');
+    const heart = document.getElementById('mainHeart');
+    const teddyL = document.getElementById('teddyL');
+    const teddyR = document.getElementById('teddyR');
+    const flower = document.getElementById('flower');
+    const finalMsg = document.getElementById('finalMsg');
+    const body = document.body;
 
-    // 1. Ефект "Искри при докосване" (Magic Touch)
-    document.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        createSparks(touch.clientX, touch.clientY, '✨', 5);
-    });
+    // --- ЕТАП 1: СЪРЦЕТО ---
+    heart.onclick = () => {
+        heart.style.transform = 'translate(-50%, -50%) scale(0)';
+        createExplosion(window.innerWidth/2, window.innerHeight/2, '💖', 30);
+        
+        setTimeout(() => {
+            heart.style.display = 'none';
+            instr.innerText = 'СЕГА ИЗБЕРИ ЕДНО МЕЧЕ...';
+            teddyL.style.display = 'block';
+            teddyR.style.display = 'block';
+            setTimeout(() => {
+                teddyL.style.bottom = '30%';
+                teddyR.style.bottom = '30%';
+            }, 100);
+        }, 600);
+    };
 
-    function createSparks(x, y, char, count) {
+    // --- ЕТАП 2: МЕЧЕТАТА ---
+    const teddyAction = () => {
+        body.style.background = 'radial-gradient(circle at center, #4b0082 0%, #000 100%)';
+        createExplosion(window.innerWidth/2, window.innerHeight/2, '✨', 40);
+        teddyL.style.transform = 'scale(0)';
+        teddyR.style.transform = 'scale(0)';
+        
+        setTimeout(() => {
+            teddyL.style.display = 'none';
+            teddyR.style.display = 'none';
+            instr.innerText = 'НЕЩО ПРЕКРАСНО ПОНИКВА ЗА ТЕБ...';
+            flower.style.display = 'block';
+            setTimeout(() => { flower.style.transform = 'translate(-50%, -50%) scale(1.5)'; }, 100);
+        }, 1000);
+    };
+
+    teddyL.onclick = teddyAction;
+    teddyR.onclick = teddyAction;
+
+    // --- ЕТАП 3: ЦВЕТЕТО ---
+    flower.onclick = () => {
+        flower.style.transform = 'translate(-50%, -50%) scale(5) rotate(360deg)';
+        flower.style.opacity = '0';
+        
+        setTimeout(() => {
+            flower.style.display = 'none';
+            instr.style.display = 'none';
+            body.style.background = 'radial-gradient(circle at center, #2b002b 0%, #000 100%)';
+            
+            // ФИНАЛ
+            finalMsg.style.display = 'block';
+            setTimeout(() => {
+                finalMsg.style.transform = 'translate(-50%, -50%) scale(1)';
+                finalMsg.classList.add('infinite-glow');
+                startInfiniteRain();
+            }, 100);
+        }, 1000);
+    };
+
+    // Помощни функции за ефекти
+    function createExplosion(x, y, char, count) {
         for(let i=0; i<count; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             p.innerHTML = char;
-            p.style.left = x + 'px';
-            p.style.top = y + 'px';
-            p.style.fontSize = Math.random()*20 + 10 + 'px';
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            p.style.fontSize = '25px';
             document.body.appendChild(p);
-            
-            const destX = (Math.random() - 0.5) * 200;
-            const destY = (Math.random() - 0.5) * 200;
-            
+            const a = Math.random() * Math.PI * 2;
+            const d = 100 + Math.random() * 200;
             p.animate([
-                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                { transform: `translate(${destX}px, ${destY}px) scale(0)`, opacity: 0 }
-            ], { duration: 1000, easing: 'ease-out' }).onfinish = () => p.remove();
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px) scale(0)`, opacity: 0 }
+            ], { duration: 1500, easing: 'ease-out' }).onfinish = () => p.remove();
         }
     }
 
-    // 2. Постоянен фон от падащи сърца
-    setInterval(() => {
-        const h = document.createElement('div');
-        h.innerHTML = '❤️';
-        h.className = 'particle';
-        h.style.left = Math.random() * 100 + 'vw';
-        h.style.top = '-50px';
-        h.style.opacity = Math.random() * 0.5;
-        h.style.fontSize = Math.random() * 15 + 10 + 'px';
-        container.appendChild(h);
-        
-        h.animate([
-            { transform: 'translateY(0) rotate(0deg)' },
-            { transform: `translateY(110vh) rotate(${Math.random()*360}deg)` }
-        ], { duration: 5000 + Math.random()*3000 }).onfinish = () => h.remove();
-    }, 400);
-
-    // 3. Основното действие
-    btn.onclick = () => {
-        btn.style.transform = 'translate(-50%, -50%) scale(0)';
-        setTimeout(() => btn.style.display = 'none', 500);
-        hint.style.display = 'none';
-        
-        // Мечетата излизат по-високо
-        const t1 = createT('10%');
-        const t2 = createT('68%');
-        setTimeout(() => { t1.style.bottom = '20%'; t2.style.bottom = '20%'; }, 100);
-
-        // Експлозия от емоджита
-        let count = 0;
-        const mainAction = setInterval(() => {
-            spawn(['❤️','💖','🌹','💋','💎','🧸'][count % 6]);
-            count++;
-            if(count > 60) {
-                clearInterval(mainAction);
-                msg.style.opacity = '1';
-                msg.style.transform = 'scale(1.2)';
-                finalFlash();
-            }
-        }, 80);
-    };
-
-    function createT(x) {
-        const t = document.createElement('div');
-        t.className = 'teddy'; t.innerHTML = '🧸'; t.style.left = x;
-        document.body.appendChild(t); return t;
+    function startInfiniteRain() {
+        setInterval(() => {
+            const e = document.createElement('div');
+            e.className = 'particle';
+            e.innerHTML = ['❤️','✨','🌸','💖'][Math.floor(Math.random()*4)];
+            e.style.left = Math.random() * 100 + 'vw';
+            e.style.top = '-50px';
+            e.style.fontSize = Math.random()*20 + 20 + 'px';
+            document.body.appendChild(e);
+            
+            e.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(110vh) rotate(${Math.random()*360}deg)`, opacity: 0.3 }
+            ], { duration: 3000 + Math.random()*3000 }).onfinish = () => e.remove();
+        }, 200);
     }
 
-    function spawn(char) {
-        const e = document.createElement('div');
-        e.className = 'particle'; e.innerHTML = char;
-        e.style.left = Math.random()*90+'vw'; e.style.bottom = '-50px';
-        e.style.fontSize = '35px';
-        document.body.appendChild(e);
-        
-        e.animate([
-            { transform: 'translateY(0) scale(1)', opacity: 1 },
-            { transform: `translateY(-110vh) rotate(${Math.random()*720}deg) scale(1.5)`, opacity: 0 }
-        ], { duration: 3000 + Math.random()*2000 }).onfinish = () => e.remove();
-    }
-
-    function finalFlash() {
-        for(let i=0; i<80; i++) {
-            setTimeout(() => {
-                createSparks(window.innerWidth/2, window.innerHeight/2.2, '💗', 1);
-            }, i * 20);
-        }
-    }
+    // Магия при докосване (винаги активна)
+    document.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        createExplosion(t.clientX, t.clientY, '✨', 3);
+    });
 </script>
 </body>
 </html>
