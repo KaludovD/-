@@ -3,206 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>За моето Слънце ❤️</title>
+<title>За Деница ✨</title>
 <style>
-    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; }
+    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; --deep: #1a001a; }
     
     body, html { 
         margin: 0; padding: 0; width: 100%; height: 100dvh; 
         overflow: hidden; background: #000; 
-        font-family: -apple-system, system-ui, sans-serif;
-        touch-action: none; transition: background 3s ease-in-out;
+        font-family: 'Helvetica Neue', sans-serif;
+        touch-action: none; transition: background 4s ease-in-out;
     }
 
-    /* Слоеве за ефекти */
-    #bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; transition: 3s; opacity: 0.5; }
-    .particle { position: absolute; pointer-events: none; z-index: 50; will-change: transform, opacity; }
-
-    /* Текст за насоки */
+    #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+    
     #instruction {
-        position: absolute; top: 12%; width: 100%; text-align: center;
-        color: white; font-size: 18px; font-weight: 300; letter-spacing: 3px;
-        z-index: 100; text-shadow: 0 0 15px var(--p);
-        transition: opacity 1s, transform 1s;
+        position: absolute; top: 10%; width: 100%; text-align: center;
+        color: white; font-size: 16px; font-weight: 200; letter-spacing: 4px;
+        z-index: 100; text-transform: uppercase; opacity: 0;
+        transition: 2s; text-shadow: 0 0 10px var(--p);
     }
 
-    /* Обекти */
-    .game-obj {
+    .element {
         position: absolute; transform: translate(-50%, -50%) scale(0);
         cursor: pointer; border: none; background: none;
-        -webkit-tap-highlight-color: transparent; transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s;
-        z-index: 150;
+        -webkit-tap-highlight-color: transparent; transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
+        z-index: 50; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
     }
 
-    #mainHeart { top: 45%; left: 50%; font-size: 100px; display: block; transform: translate(-50%, -50%) scale(1); }
-    .active-heart { animation: beat 2s infinite ease-in-out; }
-
-    .teddy { bottom: -150px; font-size: 90px; }
-    #flower-garden { position: absolute; width: 100%; height: 100%; display: none; }
-
-    /* Финален текст */
-    #finalContainer {
+    #final-stage {
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-        width: 100%; text-align: center; z-index: 200; transition: 2s cubic-bezier(0.19, 1, 0.22, 1);
+        width: 90%; text-align: center; z-index: 200; transition: 3s;
     }
-    #finalMsg {
-        font-size: 40px; font-weight: 900;
-        background: linear-gradient(90deg, #fff, var(--gold), var(--p), #fff);
+
+    #final-msg {
+        font-size: 38px; font-weight: 900; line-height: 1.2;
+        background: linear-gradient(90deg, #fff, var(--gold), #fff, var(--s), #fff);
         background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        animation: shine 4s linear infinite;
+        animation: shine 5s linear infinite;
     }
 
-    /* Анимации */
-    @keyframes beat { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } }
     @keyframes shine { to { background-position: 200% center; } }
-    @keyframes floatAround { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(10px, -20px); } }
-
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    
+    .glow-bg { animation: glowMove 8s infinite alternate; }
+    @keyframes glowMove { 
+        from { background: radial-gradient(circle at 20% 30%, #2b002b 0%, #000 100%); }
+        to { background: radial-gradient(circle at 80% 70%, #1a0033 0%, #000 100%); }
+    }
 </style>
 </head>
-<body>
+<body class="glow-bg">
 
-<div id="bg-overlay"></div>
-<div id="instruction">Деница... докосни сърцето, за да започне магията ✨</div>
+<div id="fx-layer"></div>
+<div id="instruction" style="opacity: 1;">Докосни сърцето, за да започне магията...</div>
 
-<button id="mainHeart" class="game-obj active-heart">❤️</button>
-<button id="teddyL" class="game-obj teddy" style="left: 25%;">🧸</button>
-<button id="teddyR" class="game-obj teddy" style="left: 75%;">🧸</button>
-<div id="flower-garden"></div>
+<button id="step1" class="element" style="top: 50%; left: 50%; font-size: 100px; transform: translate(-50%, -50%) scale(1);">❤️</button>
+<button id="step2L" class="element" style="top: 50%; left: 25%; font-size: 80px;">🧸</button>
+<button id="step2R" class="element" style="top: 50%; left: 75%; font-size: 80px;">🧸</button>
+<div id="star-field"></div>
+<button id="step4" class="element" style="top: 50%; left: 50%; font-size: 90px;">🌹</button>
 
-<div id="finalContainer">
-    <div id="finalMsg">ОБИЧАМ ТЕ, СЛЪНЦЕ! 💖</div>
+<div id="final-stage">
+    <div id="final-msg">ОБИЧАМ ТЕ, СЛЪНЦЕ! 💖<br><span style="font-size: 20px; font-weight: 300; letter-spacing: 2px;">Ти си моето всичко!</span></div>
 </div>
 
 <script>
     const instr = document.getElementById('instruction');
-    const heart = document.getElementById('mainHeart');
-    const teddyL = document.getElementById('teddyL');
-    const teddyR = document.getElementById('teddyR');
-    const garden = document.getElementById('flower-garden');
-    const finalCont = document.getElementById('finalContainer');
-    const bg = document.getElementById('bg-overlay');
+    const fx = document.getElementById('fx-layer');
+    const step1 = document.getElementById('step1');
+    const step2L = document.getElementById('step2L');
+    const step2R = document.getElementById('step2R');
+    const step4 = document.getElementById('step4');
+    const final = document.getElementById('final-stage');
+    
+    let starCount = 0;
 
-    let flowerCount = 0;
-
-    // --- СЦЕНА 1: СЪРЦЕТО ---
-    heart.onclick = () => {
-        heart.classList.remove('active-heart');
-        heart.style.transform = 'translate(-50%, -50%) scale(0) rotate(360deg)';
-        slowExplosion(window.innerWidth/2, window.innerHeight/2, '💖', 20);
+    // --- СЦЕНА 1 ---
+    step1.onclick = () => {
+        step1.style.transform = 'translate(-50%, -50%) scale(0) rotate(180deg)';
+        burst(window.innerWidth/2, window.innerHeight/2, '💖', 25);
         
         setTimeout(() => {
-            heart.style.display = 'none';
-            instr.style.opacity = '0';
+            instr.style.opacity = 0;
             setTimeout(() => {
-                instr.innerText = 'Мечетата те чакат... прегърни едно от тях';
-                instr.style.opacity = '1';
-                bg.style.background = 'radial-gradient(circle, #330033, #000)';
-                teddyL.style.transform = 'translate(-50%, -50%) scale(1)';
-                teddyR.style.transform = 'translate(-50%, -50%) scale(1)';
-                teddyL.style.bottom = '35%'; teddyR.style.bottom = '35%';
+                instr.innerText = 'Мечетата носят нежност... докосни ги';
+                instr.style.opacity = 1;
+                step2L.style.transform = 'translate(-50%, -50%) scale(1)';
+                step2R.style.transform = 'translate(-50%, -50%) scale(1)';
             }, 1000);
         }, 1500);
     };
 
-    // --- СЦЕНА 2: МЕЧЕТАТА ---
-    const startGarden = () => {
-        teddyL.style.opacity = '0'; teddyR.style.opacity = '0';
-        bg.style.background = 'radial-gradient(circle, #4b0082, #1a0033, #000)';
-        slowExplosion(window.innerWidth/2, window.innerHeight/2, '✨', 40);
+    // --- СЦЕНА 2 ---
+    const act2 = () => {
+        step2L.style.transform = 'translate(-50%, -50%) scale(0)';
+        step2R.style.transform = 'translate(-50%, -50%) scale(0)';
+        document.body.style.background = '#1a0033';
+        burst(window.innerWidth/2, window.innerHeight/2, '✨', 40);
 
         setTimeout(() => {
-            teddyL.style.display = 'none'; teddyR.style.display = 'none';
-            instr.innerText = 'Събери 5 вълшебни рози за късмет...';
-            garden.style.display = 'block';
-            spawnTargetFlower();
+            instr.innerText = 'Улови 5 падащи звезди...';
+            spawnStar();
         }, 2000);
     };
+    step2L.onclick = act2;
+    step2R.onclick = act2;
 
-    teddyL.onclick = startGarden;
-    teddyR.onclick = startGarden;
-
-    // --- СЦЕНА 3: ГРАДИНАТА (МИНИ ИГРА) ---
-    function spawnTargetFlower() {
-        if(flowerCount >= 5) {
-            finishFilm();
+    // --- СЦЕНА 3 ---
+    function spawnStar() {
+        if(starCount >= 5) {
+            act4();
             return;
         }
-        const f = document.createElement('button');
-        f.className = 'game-obj';
-        f.innerHTML = '🌹';
-        f.style.left = (20 + Math.random() * 60) + '%';
-        f.style.top = (30 + Math.random() * 40) + '%';
-        f.style.fontSize = '60px';
-        garden.appendChild(f);
+        const s = document.createElement('button');
+        s.className = 'element';
+        s.innerHTML = '⭐';
+        s.style.left = (15 + Math.random() * 70) + '%';
+        s.style.top = '-10%';
+        s.style.fontSize = '50px';
+        document.body.appendChild(s);
         
-        setTimeout(() => f.style.transform = 'translate(-50%, -50%) scale(1.2)', 50);
+        setTimeout(() => {
+            s.style.top = (20 + Math.random() * 60) + '%';
+            s.style.transform = 'translate(-50%, -50%) scale(1)';
+        }, 100);
 
-        f.onclick = () => {
-            flowerCount++;
-            f.style.transform = 'translate(-50%, -50%) scale(0)';
-            slowExplosion(parseInt(f.style.left), parseInt(f.style.top), '🌸', 10);
-            setTimeout(() => {
-                f.remove();
-                spawnTargetFlower();
-            }, 500);
+        s.onclick = () => {
+            starCount++;
+            burst(parseInt(s.style.left), parseInt(s.style.top), '✨', 10);
+            s.remove();
+            spawnStar();
         };
     }
 
-    // --- СЦЕНА 4: ФИНАЛ ---
-    function finishFilm() {
-        instr.style.opacity = '0';
-        bg.style.background = 'radial-gradient(circle, #660033, #000)';
-        
-        setTimeout(() => {
-            finalCont.style.display = 'block';
-            setTimeout(() => {
-                finalCont.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                startMagicRain();
-            }, 500);
-        }, 1500);
+    // --- СЦЕНА 4 ---
+    function act4() {
+        instr.innerText = 'Последното цвете за теб...';
+        step4.style.transform = 'translate(-50%, -50%) scale(1.5)';
+        step4.style.animation = 'float 3s infinite ease-in-out';
     }
 
-    function slowExplosion(x, y, char, count) {
+    step4.onclick = () => {
+        step4.style.transform = 'translate(-50%, -50%) scale(10)';
+        step4.style.opacity = 0;
+        document.body.style.background = 'radial-gradient(circle, #450021, #000)';
+        
+        setTimeout(() => {
+            instr.style.display = 'none';
+            final.style.transform = 'translate(-50%, -50%) scale(1)';
+            infiniteMagic();
+        }, 1500);
+    };
+
+    // --- ЕФЕКТИ ---
+    function burst(x, y, char, count) {
         for(let i=0; i<count; i++) {
             const p = document.createElement('div');
-            p.className = 'particle';
-            p.innerHTML = char;
+            p.style.position = 'absolute';
             p.style.left = x + 'px'; p.style.top = y + 'px';
-            p.style.fontSize = '20px';
+            p.innerHTML = char;
+            p.style.zIndex = 300;
+            p.style.pointerEvents = 'none';
             document.body.appendChild(p);
+            
             const a = Math.random() * Math.PI * 2;
             const d = 50 + Math.random() * 150;
+            
             p.animate([
                 { transform: 'translate(0,0) scale(1)', opacity: 1 },
                 { transform: `translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px) scale(0)`, opacity: 0 }
-            ], { duration: 2500, easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)' }).onfinish = () => p.remove();
+            ], { duration: 2000, easing: 'ease-out' }).onfinish = () => p.remove();
         }
     }
 
-    function startMagicRain() {
+    function infiniteMagic() {
         setInterval(() => {
-            const e = document.createElement('div');
-            e.className = 'particle';
-            e.innerHTML = ['❤️','💖','✨','🌹','🌸'][Math.floor(Math.random()*5)];
-            e.style.left = Math.random() * 100 + 'vw';
-            e.style.top = '-50px';
-            e.style.fontSize = (20 + Math.random() * 20) + 'px';
-            e.style.filter = 'blur(' + (Math.random() * 2) + 'px)';
-            document.body.appendChild(e);
+            const p = document.createElement('div');
+            p.style.position = 'absolute';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = '-50px';
+            p.innerHTML = ['❤️','💖','✨','🌸','💎'][Math.floor(Math.random()*5)];
+            p.style.fontSize = (15 + Math.random() * 20) + 'px';
+            p.style.zIndex = 150;
+            p.style.opacity = Math.random();
+            document.body.appendChild(p);
             
-            const dur = 4000 + Math.random() * 4000;
-            e.animate([
-                { transform: 'translateY(0) rotate(0deg)', opacity: 0 },
-                { transform: 'translateY(20vh) rotate(45deg)', opacity: 1, offset: 0.2 },
-                { transform: `translateY(110vh) rotate(${Math.random()*720}deg)`, opacity: 0 }
-            ], { duration: dur, easing: 'linear' }).onfinish = () => e.remove();
+            p.animate([
+                { transform: 'translateY(0) rotate(0deg)' },
+                { transform: `translateY(110vh) rotate(${Math.random()*360}deg)` }
+            ], { duration: 4000 + Math.random()*3000 }).onfinish = () => p.remove();
         }, 150);
     }
 
-    // Постоянни искри при докосване
+    // Тъч ефект
     document.addEventListener('touchstart', (e) => {
         const t = e.touches[0];
-        slowExplosion(t.clientX, t.clientY, '✨', 3);
+        burst(t.clientX, t.clientY, '✨', 3);
     });
 </script>
 </body>
