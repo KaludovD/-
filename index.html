@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>За Деница ✨</title>
 <style>
-    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; --dark-blue: #0A0A2A; --light-blue: #1A1A4A; }
+    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; --dark-blue: #0A0A2A; }
     
     body, html { 
         margin: 0; padding: 0; width: 100%; height: 100dvh; 
@@ -18,7 +18,7 @@
         position: absolute; top: 12%; width: 100%; text-align: center;
         color: white; font-size: 19px; font-weight: 300; padding: 0 25px;
         box-sizing: border-box; z-index: 1000; text-shadow: 0 0 15px var(--p);
-        transition: opacity 1.5s;
+        opacity: 1; transition: opacity 1.5s;
     }
 
     .element {
@@ -29,10 +29,13 @@
         z-index: 500;
     }
 
-    @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    .beating { animation: beat 2.5s infinite ease-in-out; }
+    /* Анимация за пулсиране */
+    @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+    .beating { animation: beat 2s infinite ease-in-out; }
 
-    /* Основен финален слайд */
+    /* Контейнери за различните фази */
+    #game-container { position: relative; width: 100%; height: 100%; }
+    
     #finalStage {
         position: absolute; top: 50%; left: 50%;
         transform: translate(-50%, -50%) scale(0);
@@ -42,35 +45,40 @@
     }
 
     #finalMsg {
-        font-size: 38px; font-weight: 900; min-height: 100px;
+        font-size: 38px; font-weight: 900; min-height: 80px;
         background: linear-gradient(90deg, #fff, var(--gold), var(--p), #fff);
         background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         animation: shine 5s linear infinite;
-        transition: opacity 2s ease;
     }
 
     #lastHeart { font-size: 100px; filter: drop-shadow(0 0 20px var(--p)); margin-top: 20px; }
+    
     #extraBtn {
-        display:none; margin-top:30px; background:none; border:1px solid white; color:white; padding:10px 20px; 
-        border-radius:20px; font-size:14px; opacity:0; transition:2s; z-index:1100;
+        display:none; margin-top:30px; background:none; border:1px solid white; color:white; 
+        padding:12px 24px; border-radius:25px; font-size:14px; opacity:0; transition:2s;
     }
 
     @keyframes shine { to { background-position: 200% center; } }
     .particle { position: absolute; pointer-events: none; z-index: 2000; }
-    .game-item { position: absolute; font-size: 60px; z-index: 600; cursor: pointer; transform: translate(-50%, -50%) scale(0); transition: 1.5s; }
 
-    /* Звездно небе */
-    #starrySky { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-blue); z-index: 1500; opacity: 0; transition: opacity 2s; }
-    .drawn-star { position: absolute; font-size: 30px; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.8); pointer-events: none; animation: starFade 1s forwards; }
-    @keyframes starFade { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-    .star-line { position: absolute; background: var(--gold); height: 2px; transform-origin: left center; pointer-events: none; opacity: 0.8; transition: opacity 1s; }
-    
-    /* Любовен скенер */
-    #loveScanner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; opacity: 0; transition: opacity 2s; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-    #fingerprintHeart { width: 150px; height: 150px; border: 5px solid var(--s); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 120px; color: var(--s); box-shadow: 0 0 30px var(--s); animation: pulseGlow 1.5s infinite alternate; }
-    @keyframes pulseGlow { from { box-shadow: 0 0 20px var(--s); } to { box-shadow: 0 0 50px var(--p); } }
-    #scannerText { color: white; font-size: 18px; margin-top: 20px; opacity: 0; transition: opacity 1s; }
-    #progressBar { width: 0; height: 10px; background: linear-gradient(90deg, var(--s), var(--p)); border-radius: 5px; margin-top: 20px; transition: width 0.1s linear; }
+    /* Звездно небе и Скенер */
+    #starrySky, #loveScanner { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        display: none; opacity: 0; transition: opacity 2s; 
+    }
+    #starrySky { background: var(--dark-blue); z-index: 1500; }
+    #loveScanner { 
+        background: #000; z-index: 2000; 
+        flex-direction: column; justify-content: center; align-items: center; 
+    }
+
+    .drawn-star { position: absolute; font-size: 30px; color: white; pointer-events: none; }
+    #fingerprintHeart { 
+        width: 150px; height: 150px; border: 4px solid var(--s); border-radius: 50%; 
+        display: flex; justify-content: center; align-items: center; font-size: 100px; 
+        box-shadow: 0 0 20px var(--s); transition: 0.5s;
+    }
+    #progressBar { width: 0; height: 8px; background: var(--p); border-radius: 4px; margin-top: 20px; transition: width 0.1s; }
 
 </style>
 </head>
@@ -87,10 +95,11 @@
 </div>
 
 <div id="starrySky"></div>
+
 <div id="loveScanner">
     <div id="fingerprintHeart">❤️</div>
-    <div id="scannerText">Задръж пръста си тук, за да измериш любовта ни...</div>
-    <div id="progressBar" style="width:0;"></div>
+    <div style="color:white; margin-top:20px; font-weight:300;">Задръж пръста си тук...</div>
+    <div id="progressBar"></div>
 </div>
 
 <script>
@@ -101,326 +110,234 @@
     const extraBtn = document.getElementById('extraBtn');
     const starrySky = document.getElementById('starrySky');
     const loveScanner = document.getElementById('loveScanner');
-    const fingerprintHeart = document.getElementById('fingerprintHeart');
-    const scannerText = document.getElementById('scannerText');
     const progressBar = document.getElementById('progressBar');
 
     let starCount = 0;
     let roseCount = 0;
-    let starsDrawn = []; // За да следим нарисуваните звезди
-    let touchPoints = []; // За звездното небе
-    let scannerInterval;
     let scannerProgress = 0;
+    let scannerInterval;
 
-    function clearScene() {
-        container.innerHTML = '';
-        const currentParticles = document.querySelectorAll('.particle');
-        currentParticles.forEach(p => p.remove());
-    }
-
-    // --- СТАРТ НА ИГРАТА ---
-    function initGame() {
-        instr.style.opacity = 1;
-        startScene1();
-    }
-
-    // --- СЦЕНА 1: СЪРЦАТА ---
+    // --- СТАРТ: СЦЕНА 1 (СЪРЦАТА СЕ ПОЯВЯВАТ ВЕДНАГА) ---
     function startScene1() {
-        clearScene();
-        document.body.style.background = '#000';
-        const positions = [
-            {t:'25%', l:'20%', size:'45px'}, {t:'75%', l:'85%', size:'45px'}, {t:'20%', l:'80%', size:'45px'}, {t:'85%', l:'15%', size:'45px'}
+        const hearts = [
+            {t:'25%', l:'20%', s:'40px'},
+            {t:'75%', l:'85%', s:'40px'},
+            {t:'20%', l:'80%', s:'40px'},
+            {t:'85%', l:'15%', s:'40px'}
         ];
-        positions.forEach(pos => {
+
+        hearts.forEach(pos => {
             const h = document.createElement('button');
             h.innerHTML = '❤️';
             h.className = 'element';
-            h.style.cssText = `top:${pos.t}; left:${pos.l}; font-size:${pos.size};`;
+            h.style.cssText = `top:${pos.t}; left:${pos.l}; font-size:${pos.s};`;
             container.appendChild(h);
-            setTimeout(() => h.style.transform = 'translate(-50%, -50%) scale(1)', 500 + Math.random()*300);
+            setTimeout(() => h.style.transform = 'translate(-50%, -50%) scale(1)', 100);
         });
 
         const bigH = document.createElement('button');
         bigH.innerHTML = '❤️';
         bigH.className = 'element beating';
-        bigH.style.cssText = `top:50%; left:50%; font-size:110px;`;
+        bigH.style.cssText = `top:50%; left:50%; font-size:110px; z-index:600;`;
         container.appendChild(bigH);
-        setTimeout(() => bigH.style.transform = 'translate(-50%, -50%) scale(1)', 1000);
+        setTimeout(() => bigH.style.transform = 'translate(-50%, -50%) scale(1)', 300);
 
         bigH.onclick = () => {
             burst(window.innerWidth/2, window.innerHeight/2, '💖', 40);
             document.querySelectorAll('.element').forEach(el => el.style.opacity = '0');
-            setTimeout(() => {
-                clearScene();
-                startScene2();
-            }, 2000); // По-бавен преход
+            setTimeout(startScene2, 1500);
         };
     }
 
     // --- СЦЕНА 2: НИНО ---
     function startScene2() {
-        instr.style.opacity = 0;
-        setTimeout(() => {
-            instr.innerText = 'Гушни Нино за да продължиш';
-            instr.style.opacity = 1;
-            const nino = document.createElement('button');
-            nino.innerHTML = '🧸';
-            nino.className = 'element beating';
-            nino.style.cssText = 'top:50%; left:50%; font-size:130px;';
-            container.appendChild(nino);
-            setTimeout(() => nino.style.transform = 'translate(-50%, -50%) scale(1)', 1000);
+        container.innerHTML = '';
+        instr.innerText = 'Гушни Нино за да продължиш';
+        const nino = document.createElement('button');
+        nino.innerHTML = '🧸';
+        nino.className = 'element beating';
+        nino.style.cssText = 'top:50%; left:50%; font-size:130px;';
+        container.appendChild(nino);
+        setTimeout(() => nino.style.transform = 'translate(-50%, -50%) scale(1)', 500);
 
-            nino.onclick = () => {
-                burst(window.innerWidth/2, window.innerHeight/2, '✨', 50);
-                nino.style.opacity = '0';
-                setTimeout(() => {
-                    clearScene();
-                    startScene3(0);
-                }, 2000); // По-бавен преход
-            };
-        }, 1500);
+        nino.onclick = () => {
+            burst(window.innerWidth/2, window.innerHeight/2, '✨', 40);
+            nino.style.opacity = '0';
+            setTimeout(() => startScene3(0), 1500);
+        };
     }
 
-    // --- СЦЕНА 3: ЗВЕЗДИТЕ (БАВНО ПАДАНЕ) ---
+    // --- СЦЕНА 3: ЗВЕЗДИ ---
     function startScene3(count) {
-        clearScene();
+        container.innerHTML = '';
         instr.innerText = `Улови падащите звезди... (${count}/5)`;
         document.body.style.background = '#120024';
         
         if (count >= 5) {
-            setTimeout(startScene4, 2000); // По-бавен преход
+            setTimeout(startScene4, 1500);
             return;
         }
 
         const s = document.createElement('div');
         s.innerHTML = '⭐';
-        s.className = 'game-item';
-        s.style.left = (15 + Math.random() * 70) + '%';
-        s.style.top = '-50px';
+        s.className = 'element';
+        s.style.cssText = `left:${15 + Math.random()*70}%; top:-50px; font-size:60px;`;
         container.appendChild(s);
-        setTimeout(() => s.style.transform = 'translate(-50%, -50%) scale(1)', 300);
+        setTimeout(() => s.style.transform = 'translate(-50%, -50%) scale(1)', 100);
 
         let pos = -50;
         const fall = setInterval(() => {
-            pos += 1.2; // Още по-бавно падане
+            pos += 1.5;
             s.style.top = pos + 'px';
             if (pos > window.innerHeight) {
                 clearInterval(fall);
-                if(s.parentElement) s.remove();
+                s.remove();
                 startScene3(count);
             }
-        }, 20); // По-често опресняване за плавност
+        }, 16);
 
         s.onclick = () => {
             clearInterval(fall);
-            burst(s.offsetLeft, s.offsetTop, '✨', 25);
+            burst(s.offsetLeft, s.offsetTop, '✨', 20);
             s.remove();
             startScene3(count + 1);
         };
     }
 
-    // --- СЦЕНА 4: РОЗИТЕ ---
+    // --- СЦЕНА 4: РОЗИ ---
     function startScene4() {
-        clearScene();
+        container.innerHTML = '';
         instr.innerText = 'Подари си тези рози...';
         document.body.style.background = 'radial-gradient(circle, #2b002b, #000)';
         let rosesFound = 0;
 
-        function spawnOneRose() {
-            if (rosesFound >= 5) {
-                setTimeout(showFinal, 2000); // По-бавен преход
-                return;
-            }
+        function spawn() {
+            if (rosesFound >= 5) { setTimeout(showFinal, 1500); return; }
             const r = document.createElement('button');
             r.innerHTML = '🌹';
-            r.className = 'game-item';
-            r.style.left = (20 + Math.random() * 60) + '%';
-            r.style.top = (30 + Math.random() * 40) + '%';
+            r.className = 'element';
+            r.style.cssText = `left:${20 + Math.random()*60}%; top:${30 + Math.random()*40}%; font-size:70px;`;
             container.appendChild(r);
-            setTimeout(() => r.style.transform = 'translate(-50%, -50%) scale(1.2)', 500);
+            setTimeout(() => r.style.transform = 'translate(-50%, -50%) scale(1)', 200);
 
             r.onclick = () => {
                 rosesFound++;
-                burst(r.offsetLeft, r.offsetTop, '🌸', 30);
-                r.style.opacity = '0';
-                setTimeout(() => { r.remove(); spawnOneRose(); }, 1200); // По-бавно изчезване
+                burst(r.offsetLeft, r.offsetTop, '🌸', 20);
+                r.remove();
+                spawn();
             };
         }
-        spawnOneRose();
+        spawn();
     }
 
-    // --- ФИНАЛ: ЧАСТ 1 ---
+    // --- ФИНАЛ ЧАСТ 1 ---
     function showFinal() {
-        clearScene();
-        instr.style.opacity = 0;
-        document.body.style.background = 'radial-gradient(circle, #450021, #000)';
-        
+        container.innerHTML = '';
+        instr.style.opacity = '0';
         finalStage.style.transform = 'translate(-50%, -50%) scale(1)';
         
-        // Постоянен нежен дъжд
-        setInterval(() => {
-            burst(Math.random()*window.innerWidth, Math.random()*window.innerHeight, '❤️', 1);
-        }, 400);
-
-        // УДЪЛЖАВАНЕ НА ФИНАЛА
         setTimeout(() => {
             finalMsg.style.opacity = '0';
             setTimeout(() => {
                 finalMsg.innerText = "ТИ СИ МОЯТ СВЯТ! 🌍";
                 finalMsg.style.opacity = '1';
-                
                 setTimeout(() => {
                     extraBtn.style.display = 'block';
                     setTimeout(() => extraBtn.style.opacity = '1', 100);
                 }, 3000);
-            }, 2000);
-        }, 5000);
+            }, 1500);
+        }, 4000);
+
+        setInterval(() => burst(Math.random()*innerWidth, Math.random()*innerHeight, '❤️', 1), 500);
     }
 
-    // --- ФИНАЛ: ЧАСТ 2 - ЗВЕЗДНО НЕБЕ (Вариант 4) ---
+    // --- ФИНАЛ ЧАСТ 2: ЗВЕЗДНО НЕБЕ ---
     extraBtn.onclick = () => {
-        extraBtn.style.opacity = '0';
-        instr.style.opacity = 0;
-        finalStage.style.opacity = 0;
+        finalStage.style.opacity = '0';
         setTimeout(() => {
             finalStage.style.display = 'none';
-            extraBtn.style.display = 'none';
-            starrySky.style.opacity = 1;
-            document.body.style.background = var(--dark-blue);
+            starrySky.style.display = 'block';
+            setTimeout(() => starrySky.style.opacity = '1', 100);
             instr.innerText = 'Докосни небето, за да изпишеш името си...';
-            instr.style.top = '5%';
-            instr.style.opacity = 1;
-
-            starrySky.addEventListener('touchstart', handleStarTouch);
-        }, 2000);
+            instr.style.opacity = '1';
+            
+            const name = "ДЕНИЦА";
+            let idx = 0;
+            starrySky.ontouchstart = (e) => {
+                const t = e.touches[0];
+                const s = document.createElement('div');
+                s.className = 'drawn-star';
+                s.innerText = name[idx];
+                s.style.left = t.clientX + 'px';
+                s.style.top = t.clientY + 'px';
+                starrySky.appendChild(s);
+                idx = (idx + 1) % name.length;
+                burst(t.clientX, t.clientY, '✨', 5);
+                if (document.querySelectorAll('.drawn-star').length > 12) {
+                    starrySky.ontouchstart = null;
+                    setTimeout(startScanner, 2000);
+                }
+            };
+        }, 1500);
     };
 
-    const nameToDraw = "ДЕНИЦА";
-    let currentLetterIndex = 0;
-
-    function handleStarTouch(e) {
-        const touch = e.touches[0];
-        const x = touch.clientX;
-        const y = touch.clientY;
-
-        const star = document.createElement('div');
-        star.className = 'drawn-star';
-        star.innerText = nameToDraw[currentLetterIndex];
-        star.style.left = x + 'px';
-        star.style.top = y + 'px';
-        starrySky.appendChild(star);
-        starsDrawn.push(star);
-        burst(x,y,'✨',5); // Допълнителен ефект
-
-        if (touchPoints.length > 0) {
-            const lastPoint = touchPoints[touchPoints.length - 1];
-            drawLine(lastPoint.x, lastPoint.y, x, y);
-        }
-        touchPoints.push({x: x, y: y});
-        
-        currentLetterIndex = (currentLetterIndex + 1) % nameToDraw.length;
-
-        if (starsDrawn.length >= nameToDraw.length * 2) { // След достатъчно букви
-            starrySky.removeEventListener('touchstart', handleStarTouch);
-            setTimeout(startLoveScanner, 3000);
-        }
-    }
-
-    function drawLine(x1, y1, x2, y2) {
-        const line = document.createElement('div');
-        line.className = 'star-line';
-        const length = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-        const angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
-        
-        line.style.width = length + 'px';
-        line.style.left = x1 + 'px';
-        line.style.top = y1 + 'px';
-        line.style.transform = `rotate(${angle}deg)`;
-        starrySky.appendChild(line);
-    }
-
-    // --- ФИНАЛ: ЧАСТ 3 - ЛЮБОВЕН СКЕНЕР (Вариант 5) ---
-    function startLoveScanner() {
-        instr.style.opacity = 0;
-        starrySky.style.opacity = 0;
-        document.body.style.background = '#000';
+    // --- ФИНАЛ ЧАСТ 3: СКЕНЕР ---
+    function startScanner() {
+        starrySky.style.opacity = '0';
         setTimeout(() => {
             starrySky.style.display = 'none';
-            loveScanner.style.opacity = 1;
-            scannerText.style.opacity = 1;
+            loveScanner.style.display = 'flex';
+            setTimeout(() => loveScanner.style.opacity = '1', 100);
             instr.innerText = 'Задръж пръста си върху сърцето...';
-            instr.style.top = '12%';
-            instr.style.opacity = 1;
-
-            fingerprintHeart.addEventListener('touchstart', handleScannerStart);
-            fingerprintHeart.addEventListener('touchend', handleScannerEnd);
-        }, 2000);
+        }, 1500);
     }
 
-    function handleScannerStart(e) {
-        e.preventDefault(); // Предотвратява скрол на iOS
-        scannerProgress = 0;
-        progressBar.style.width = '0%';
+    document.getElementById('fingerprintHeart').ontouchstart = (e) => {
+        e.preventDefault();
         scannerInterval = setInterval(() => {
             scannerProgress += 2;
             progressBar.style.width = scannerProgress + '%';
             if (scannerProgress >= 100) {
                 clearInterval(scannerInterval);
-                finishScanner();
+                finish();
             }
         }, 50);
-    }
+    };
 
-    function handleScannerEnd() {
+    document.getElementById('fingerprintHeart').ontouchend = () => {
         clearInterval(scannerInterval);
         scannerProgress = 0;
         progressBar.style.width = '0%';
-    }
+    };
 
-    function finishScanner() {
-        burst(window.innerWidth/2, window.innerHeight/2, '💖', 100);
-        scannerText.style.opacity = 0;
-        fingerprintHeart.style.transform = 'scale(5)';
-        fingerprintHeart.style.opacity = 0;
-        progressBar.style.opacity = 0;
-        
+    function finish() {
+        loveScanner.style.opacity = '0';
         setTimeout(() => {
+            loveScanner.style.display = 'none';
             instr.innerText = 'ERROR: ЛЮБОВТА НИ Е БЕЗКРАЙНА! ♾️';
-            instr.style.fontSize = '25px';
-            instr.style.transition = 'none'; // Изключва транзицията за да е моментално
             instr.style.top = '50%';
-            instr.style.transform = 'translateY(-50%)';
-            instr.style.opacity = 1;
-            document.body.style.background = 'linear-gradient(45deg, var(--p), var(--s), var(--dark-blue))'; // Цветен фон
-
-            // Безкраен дъжд от ефекти след финала
-            setInterval(() => {
-                burst(Math.random()*window.innerWidth, Math.random()*window.innerHeight, '❤️', 1);
-            }, 300);
-
+            instr.style.fontSize = '24px';
+            instr.style.opacity = '1';
+            document.body.style.background = 'linear-gradient(45deg, #ff0080, #120024)';
+            setInterval(() => burst(Math.random()*innerWidth, Math.random()*innerHeight, '❤️', 1), 200);
         }, 1500);
     }
 
-    // --- ПОМОЩНИ ФУНКЦИИ ---
-    function burst(x, y, char, count) {
-        for(let i=0; i<count; i++) {
+    function burst(x, y, c, n) {
+        for(let i=0; i<n; i++) {
             const p = document.createElement('div');
-            p.className = 'particle';
-            p.innerHTML = char;
+            p.className = 'particle'; p.innerHTML = c;
             p.style.left = x + 'px'; p.style.top = y + 'px';
-            p.style.fontSize = (Math.random() * 20 + 10) + 'px';
             document.body.appendChild(p);
-            const a = Math.random() * Math.PI * 2;
-            const d = 50 + Math.random() * 150;
-            p.animate([
-                { transform: 'translate(0,0) scale(1)', opacity: 1 },
-                { transform: `translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px) scale(0)`, opacity: 0 }
-            ], { duration: 2500, easing: 'ease-out' }).onfinish = () => p.remove();
+            const a = Math.random()*Math.PI*2, d = 40+Math.random()*100;
+            p.animate([{transform:'translate(0,0) scale(1)', opacity:1}, 
+                       {transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(0)`, opacity:0}], 
+                       {duration:2000}).onfinish = () => p.remove();
         }
     }
 
-    // --- СТАРТ НА ИГРАТА ПРИ ЗАРЕЖДАНЕ ---
-    initGame();
+    // Стартиране веднага
+    window.onload = startScene1;
 </script>
 </body>
 </html>
