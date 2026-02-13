@@ -2,219 +2,235 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>За Деница ❤️</title>
 
 <style>
 body,html{
 margin:0;
-padding:0;
 height:100dvh;
 overflow:hidden;
 background:#000;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-color:white;
-touch-action:manipulation;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+color:#fff;
+}
+
+/* SLIDES */
+.slide{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+transition:1s;
+opacity:0;
+pointer-events:none;
+}
+.active{
+opacity:1;
+pointer-events:auto;
 }
 
 /* фон */
-#bg{
-position:fixed;
+.bg{
+position:absolute;
 inset:0;
 background:radial-gradient(circle,#330033,#000);
-transition:2s;
-z-index:-2;
+z-index:-1;
 }
 
-/* звезди */
-.star{
-position:absolute;
-background:white;
-border-radius:50%;
-opacity:.5;
+/* текст */
+h2{
+text-align:center;
+padding:20px;
 }
 
-/* сърце */
-#heart{
-position:absolute;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%);
-font-size:100px;
-background:none;
-border:none;
+/* сърца избор */
+.hearts{
+display:flex;
+gap:20px;
+align-items:center;
+}
+.heart{
+font-size:50px;
 cursor:pointer;
-animation:beat 1.2s infinite;
+transition:.3s;
 }
-
-@keyframes beat{
-50%{transform:translate(-50%,-50%) scale(1.15);}
+.big{
+font-size:110px;
+animation:pulse 1.2s infinite;
+}
+@keyframes pulse{
+50%{transform:scale(1.2);}
 }
 
 /* мече */
 #teddy{
+font-size:100px;
+cursor:pointer;
+transition:1s;
+}
+
+/* падащи звезди */
+.star{
 position:absolute;
-bottom:-150px;
-left:50%;
-transform:translateX(-50%);
-font-size:90px;
-transition:1.4s cubic-bezier(.23,1,.32,1);
-display:none;
+font-size:40px;
 cursor:pointer;
 }
 
-#hugText{
+/* поляна */
+.field{
+background:linear-gradient(#001a00,#003300);
+}
+.rose{
+font-size:50px;
 position:absolute;
-top:55%;
-width:100%;
-text-align:center;
-font-size:26px;
-opacity:0;
-transition:.6s;
+cursor:pointer;
 }
 
-/* финална сцена */
+/* финал */
 #finalHeart{
-position:absolute;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%) scale(0);
-font-size:140px;
-opacity:0;
-filter:drop-shadow(0 0 40px #ff4da6);
-transition:1.5s;
+font-size:160px;
+animation:pulse 1.2s infinite;
+filter:drop-shadow(0 0 30px pink);
 }
 
-#finalText{
-position:absolute;
-top:60%;
-width:100%;
-text-align:center;
-font-size:36px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-/* частици */
 .float{
 position:absolute;
 pointer-events:none;
-will-change:transform,opacity;
-transform:translateZ(0);
 }
 </style>
 </head>
 
 <body>
 
-<div id="bg"></div>
+<div class="bg"></div>
 
-<button id="heart">❤️</button>
+<!-- SLIDE 1 -->
+<div id="s1" class="slide active">
+<h2>Здравей Дени ❤️<br>за да започнем ще трябва да избереш най-голямото сърце</h2>
+<div class="hearts">
+<div class="heart">❤️</div>
+<div class="heart">💖</div>
+<div class="heart big" id="correctHeart">💗</div>
+<div class="heart">💕</div>
+<div class="heart">💘</div>
+</div>
+</div>
+
+<!-- SLIDE 2 -->
+<div id="s2" class="slide">
+<h2>Гушни Нино за да продължиш 🤍</h2>
 <div id="teddy">🧸</div>
+</div>
 
-<div id="hugText">Гушни Нино за да продължиш 🤍</div>
+<!-- SLIDE 3 -->
+<div id="s3" class="slide">
+<h2>Натисни падащите звезди ✨</h2>
+</div>
 
-<div id="finalHeart">💖</div>
-<div id="finalText"></div>
+<!-- SLIDE 4 -->
+<div id="s4" class="slide field">
+<h2>Събери розите за мен 🌹</h2>
+</div>
+
+<!-- SLIDE 5 FINAL -->
+<div id="s5" class="slide">
+<h1>ОБИЧАМ ТЕ СЛЪНЦЕ ❤️</h1>
+<div id="finalHeart">❤️</div>
+</div>
 
 <script>
-const heart=document.getElementById("heart");
-const teddy=document.getElementById("teddy");
-const hugText=document.getElementById("hugText");
-const finalHeart=document.getElementById("finalHeart");
-const finalText=document.getElementById("finalText");
-const bg=document.getElementById("bg");
+const slides=[...document.querySelectorAll(".slide")];
+function go(n){
+slides.forEach(s=>s.classList.remove("active"));
+slides[n].classList.add("active");
+}
 
-/* звезди */
-for(let i=0;i<80;i++){
+/* STEP 1 */
+document.getElementById("correctHeart").onclick=()=>{
+go(1);
+};
+
+/* STEP 2 TEDDY */
+document.getElementById("teddy").onclick=()=>{
+go(2);
+spawnStars();
+};
+
+/* STEP 3 STARS */
+let starsClicked=0;
+function spawnStars(){
+for(let i=0;i<5;i++){
 let s=document.createElement("div");
+s.innerHTML="⭐";
 s.className="star";
-let size=Math.random()*2+"px";
-s.style.width=size;
-s.style.height=size;
-s.style.left=Math.random()*100+"%";
-s.style.top=Math.random()*100+"%";
+s.style.left=Math.random()*80+"%";
+s.style.top="-50px";
+
 document.body.appendChild(s);
+
+s.animate([
+{transform:"translateY(0)"},
+{transform:"translateY(110vh)"}
+],{duration:3000,easing:"linear"});
+
+s.onclick=()=>{
+s.remove();
+starsClicked++;
+if(starsClicked===5){
+go(3);
+spawnRoses();
 }
-
-/* натискане сърце */
-heart.onclick=()=>{
-heart.animate([
-{transform:"translate(-50%,-50%) scale(1)",opacity:1},
-{transform:"translate(-50%,-50%) scale(2)",opacity:0}
-],{duration:600});
-
-setTimeout(()=>heart.remove(),600);
-
-teddy.style.display="block";
-setTimeout(()=>{
-teddy.style.bottom="18%";
-hugText.style.opacity="1";
-},100);
 };
-
-/* гушкане */
-teddy.onclick=()=>{
-hugText.style.opacity="0";
-
-if(navigator.vibrate){
-navigator.vibrate([120,60,200]);
+}
 }
 
-rain();
+/* STEP 4 ROSES */
+let roses=0;
+function spawnRoses(){
+for(let i=0;i<5;i++){
+let r=document.createElement("div");
+r.innerHTML="🌹";
+r.className="rose";
+r.style.left=Math.random()*85+"%";
+r.style.top=Math.random()*70+20+"%";
+document.getElementById("s4").appendChild(r);
 
-setTimeout(startFinalScene,2200);
+r.onclick=()=>{
+r.remove();
+roses++;
+if(roses===5){
+startFinal();
+}
 };
-
-/* дъжд */
-function rain(){
-let c=0;
-let r=setInterval(()=>{
-spawn(["❤️","💖","✨","🌹"][Math.floor(Math.random()*4)]);
-c++;
-if(c>45)clearInterval(r);
-},100);
+}
 }
 
-function spawn(e){
-const el=document.createElement("div");
-el.innerHTML=e;
-el.className="float";
-el.style.left=Math.random()*90+"%";
-el.style.bottom="-40px";
-el.style.fontSize="26px";
+/* FINAL */
+function startFinal(){
+go(4);
+setInterval(()=>{
+spawnFloat(["❤️","💖","💕","✨"]);
+},300);
+}
 
-const d=2+Math.random()*2;
+function spawnFloat(arr){
+let e=document.createElement("div");
+e.innerHTML=arr[Math.floor(Math.random()*arr.length)];
+e.className="float";
+e.style.left=Math.random()*100+"%";
+e.style.bottom="-20px";
+e.style.fontSize="30px";
 
-el.animate([
+e.animate([
 {transform:"translateY(0)",opacity:1},
-{transform:"translateY(-100vh) rotate(360deg)",opacity:0}
-],{duration:d*1000,easing:"linear"});
+{transform:"translateY(-100vh)",opacity:0}
+],{duration:4000});
 
-document.body.appendChild(el);
-setTimeout(()=>el.remove(),d*1000);
-}
-
-/* FINAL CINEMATIC */
-function startFinalScene(){
-
-bg.style.background="radial-gradient(circle,#ff4da6,#2b001a)";
-
-finalHeart.style.opacity="1";
-finalHeart.style.transform="translate(-50%,-50%) scale(1)";
-
-typeText("ОБИЧАМ ТЕ, ДЕНИЦА ❤️");
-}
-
-/* typing effect */
-function typeText(text){
-let i=0;
-finalText.innerHTML="";
-let typing=setInterval(()=>{
-finalText.innerHTML+=text[i];
-i++;
-if(i>=text.length)clearInterval(typing);
-},90);
+document.body.appendChild(e);
+setTimeout(()=>e.remove(),4000);
 }
 </script>
 
