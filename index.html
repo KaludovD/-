@@ -2,237 +2,224 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>За Деница ❤️</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>За Деница ✨</title>
 <style>
-body,html{
-margin:0;
-height:100dvh;
-overflow:hidden;
-background:#000;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
-color:#fff;
-}
+    :root { --p: #ff0080; --s: #ff66cc; --gold: #ffd700; }
+    
+    body, html { 
+        margin: 0; padding: 0; width: 100%; height: 100dvh; 
+        overflow: hidden; background: #000; 
+        font-family: -apple-system, system-ui, sans-serif;
+        touch-action: none; transition: background 2s ease-in-out;
+    }
 
-/* SLIDES */
-.slide{
-position:absolute;
-inset:0;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-transition:1s;
-opacity:0;
-pointer-events:none;
-}
-.active{
-opacity:1;
-pointer-events:auto;
-}
+    /* Общи стилове за елементите */
+    .element {
+        position: absolute; transform: translate(-50%, -50%) scale(0);
+        cursor: pointer; border: none; background: none;
+        -webkit-tap-highlight-color: transparent; 
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
+        z-index: 100;
+    }
 
-/* фон */
-.bg{
-position:absolute;
-inset:0;
-background:radial-gradient(circle,#330033,#000);
-z-index:-1;
-}
+    #instruction {
+        position: absolute; top: 10%; width: 100%; text-align: center;
+        color: white; font-size: 18px; font-weight: 300; padding: 0 20px;
+        box-sizing: border-box; z-index: 150; text-shadow: 0 0 10px var(--p);
+        transition: opacity 0.5s;
+    }
 
-/* текст */
-h2{
-text-align:center;
-padding:20px;
-}
+    /* Сцена 1: Сърца */
+    .small-heart { font-size: 40px; }
+    #bigHeart { font-size: 110px; animation: beat 1.5s infinite; }
 
-/* сърца избор */
-.hearts{
-display:flex;
-gap:20px;
-align-items:center;
-}
-.heart{
-font-size:50px;
-cursor:pointer;
-transition:.3s;
-}
-.big{
-font-size:110px;
-animation:pulse 1.2s infinite;
-}
-@keyframes pulse{
-50%{transform:scale(1.2);}
-}
+    /* Сцена 2: Нино */
+    #nino { font-size: 120px; top: 50%; left: 50%; }
 
-/* мече */
-#teddy{
-font-size:100px;
-cursor:pointer;
-transition:1s;
-}
+    /* Сцена 3: Звезди */
+    .falling-star { font-size: 50px; position: absolute; z-index: 100; }
 
-/* падащи звезди */
-.star{
-position:absolute;
-font-size:40px;
-cursor:pointer;
-}
+    /* Сцена 4: Рози */
+    .rose { font-size: 60px; }
 
-/* поляна */
-.field{
-background:linear-gradient(#001a00,#003300);
-}
-.rose{
-font-size:50px;
-position:absolute;
-cursor:pointer;
-}
+    /* Финал */
+    #finalStage {
+        position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0);
+        width: 100%; text-align: center; z-index: 200; transition: 2s;
+    }
+    #finalMsg {
+        font-size: 40px; font-weight: 900;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--p), #fff);
+        background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        animation: shine 3s linear infinite;
+    }
 
-/* финал */
-#finalHeart{
-font-size:160px;
-animation:pulse 1.2s infinite;
-filter:drop-shadow(0 0 30px pink);
-}
+    @keyframes beat { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } }
+    @keyframes shine { to { background-position: 200% center; } }
+    .particle { position: absolute; pointer-events: none; z-index: 300; }
 
-.float{
-position:absolute;
-pointer-events:none;
-}
 </style>
 </head>
-
 <body>
 
-<div class="bg"></div>
+<div id="instruction">Здравей Дени, за да започнем ще трябва да избереш най-голямото сърце</div>
 
-<!-- SLIDE 1 -->
-<div id="s1" class="slide active">
-<h2>Здравей Дени ❤️<br>за да започнем ще трябва да избереш най-голямото сърце</h2>
-<div class="hearts">
-<div class="heart">❤️</div>
-<div class="heart">💖</div>
-<div class="heart big" id="correctHeart">💗</div>
-<div class="heart">💕</div>
-<div class="heart">💘</div>
-</div>
-</div>
+<button class="element small-heart" style="top:30%; left:20%">❤️</button>
+<button class="element small-heart" style="top:70%; left:80%">❤️</button>
+<button id="bigHeart" class="element" style="top:50%; left:50%">❤️</button>
+<button class="element small-heart" style="top:25%; left:75%">❤️</button>
+<button class="element small-heart" style="top:80%; left:25%">❤️</button>
 
-<!-- SLIDE 2 -->
-<div id="s2" class="slide">
-<h2>Гушни Нино за да продължиш 🤍</h2>
-<div id="teddy">🧸</div>
-</div>
+<button id="nino" class="element">🧸</button>
 
-<!-- SLIDE 3 -->
-<div id="s3" class="slide">
-<h2>Натисни падащите звезди ✨</h2>
-</div>
-
-<!-- SLIDE 4 -->
-<div id="s4" class="slide field">
-<h2>Събери розите за мен 🌹</h2>
-</div>
-
-<!-- SLIDE 5 FINAL -->
-<div id="s5" class="slide">
-<h1>ОБИЧАМ ТЕ СЛЪНЦЕ ❤️</h1>
-<div id="finalHeart">❤️</div>
+<div id="finalStage">
+    <div id="finalMsg">ОБИЧАМ ТЕ СЛЪНЦЕ! 💖</div>
+    <div id="lastHeart" style="font-size: 100px; margin-top: 20px; animation: beat 1.2s infinite;">❤️</div>
 </div>
 
 <script>
-const slides=[...document.querySelectorAll(".slide")];
-function go(n){
-slides.forEach(s=>s.classList.remove("active"));
-slides[n].classList.add("active");
-}
+    const instr = document.getElementById('instruction');
+    const bigHeart = document.getElementById('bigHeart');
+    const nino = document.getElementById('nino');
+    const finalStage = document.getElementById('finalStage');
+    
+    let starCount = 0;
+    let roseCount = 0;
 
-/* STEP 1 */
-document.getElementById("correctHeart").onclick=()=>{
-go(1);
-};
+    // Показване на първите сърца
+    document.querySelectorAll('.element').forEach(el => {
+        if(el.id !== 'nino' && el.id !== 'magicFlower') el.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
 
-/* STEP 2 TEDDY */
-document.getElementById("teddy").onclick=()=>{
-go(2);
-spawnStars();
-};
+    // --- СТЪПКА 1: ГОЛЯМОТО СЪРЦЕ ---
+    bigHeart.onclick = () => {
+        burst(window.innerWidth/2, window.innerHeight/2, '💖', 30);
+        document.querySelectorAll('.small-heart').forEach(h => h.style.transform = 'translate(-50%, -50%) scale(0)');
+        bigHeart.style.transform = 'translate(-50%, -50%) scale(0)';
+        
+        setTimeout(() => {
+            instr.innerText = 'Гушни Нино за да продължиш';
+            nino.style.transform = 'translate(-50%, -50%) scale(1)';
+        }, 1000);
+    };
 
-/* STEP 3 STARS */
-let starsClicked=0;
-function spawnStars(){
-for(let i=0;i<5;i++){
-let s=document.createElement("div");
-s.innerHTML="⭐";
-s.className="star";
-s.style.left=Math.random()*80+"%";
-s.style.top="-50px";
+    // --- СТЪПКА 2: НИНО ---
+    nino.onclick = () => {
+        burst(window.innerWidth/2, window.innerHeight/2, '✨', 40);
+        nino.style.transform = 'translate(-50%, -50%) scale(0)';
+        document.body.style.background = '#1a0033';
+        
+        setTimeout(() => {
+            instr.innerText = 'Улови падащите звезди...';
+            spawnStars();
+        }, 1000);
+    };
 
-document.body.appendChild(s);
+    // --- СТЪПКА 3: ЗВЕЗДИ ---
+    function spawnStars() {
+        if(starCount >= 5) {
+            setTimeout(startRoseScene, 500);
+            return;
+        }
+        const s = document.createElement('div');
+        s.innerHTML = '⭐';
+        s.className = 'falling-star';
+        s.style.left = Math.random() * 80 + 10 + '%';
+        s.style.top = '-10%';
+        document.body.appendChild(s);
 
-s.animate([
-{transform:"translateY(0)"},
-{transform:"translateY(110vh)"}
-],{duration:3000,easing:"linear"});
+        const anim = s.animate([
+            { top: '-10%', transform: 'rotate(0deg)' },
+            { top: '110%', transform: 'rotate(360deg)' }
+        ], { duration: 3000, easing: 'linear' });
 
-s.onclick=()=>{
-s.remove();
-starsClicked++;
-if(starsClicked===5){
-go(3);
-spawnRoses();
-}
-};
-}
-}
+        s.onclick = () => {
+            starCount++;
+            burst(s.offsetLeft, s.offsetTop, '✨', 10);
+            s.remove();
+            spawnStars();
+        };
 
-/* STEP 4 ROSES */
-let roses=0;
-function spawnRoses(){
-for(let i=0;i<5;i++){
-let r=document.createElement("div");
-r.innerHTML="🌹";
-r.className="rose";
-r.style.left=Math.random()*85+"%";
-r.style.top=Math.random()*70+20+"%";
-document.getElementById("s4").appendChild(r);
+        anim.onfinish = () => { if(s.parentElement) s.remove(); if(starCount < 5) spawnStars(); };
+    }
 
-r.onclick=()=>{
-r.remove();
-roses++;
-if(roses===5){
-startFinal();
-}
-};
-}
-}
+    // --- СТЪПКА 4: РОЗИ ---
+    function startRoseScene() {
+        instr.innerText = 'Събери розите от поляната...';
+        document.body.style.background = 'radial-gradient(circle, #2b002b, #000)';
+        spawnRoses();
+    }
 
-/* FINAL */
-function startFinal(){
-go(4);
-setInterval(()=>{
-spawnFloat(["❤️","💖","💕","✨"]);
-},300);
-}
+    function spawnRoses() {
+        if(roseCount >= 5) {
+            setTimeout(showFinal, 1000);
+            return;
+        }
+        const r = document.createElement('button');
+        r.innerHTML = '🌹';
+        r.className = 'element rose';
+        r.style.left = (20 + Math.random() * 60) + '%';
+        r.style.top = (30 + Math.random() * 40) + '%';
+        document.body.appendChild(r);
+        
+        setTimeout(() => r.style.transform = 'translate(-50%, -50%) scale(1)', 50);
 
-function spawnFloat(arr){
-let e=document.createElement("div");
-e.innerHTML=arr[Math.floor(Math.random()*arr.length)];
-e.className="float";
-e.style.left=Math.random()*100+"%";
-e.style.bottom="-20px";
-e.style.fontSize="30px";
+        r.onclick = () => {
+            roseCount++;
+            burst(r.offsetLeft, r.offsetTop, '🌸', 15);
+            r.style.transform = 'translate(-50%, -50%) scale(0)';
+            setTimeout(() => { r.remove(); spawnRoses(); }, 500);
+        };
+    }
 
-e.animate([
-{transform:"translateY(0)",opacity:1},
-{transform:"translateY(-100vh)",opacity:0}
-],{duration:4000});
+    // --- ФИНАЛ ---
+    function showFinal() {
+        instr.style.opacity = '0';
+        finalStage.style.transform = 'translate(-50%, -50%) scale(1)';
+        
+        setInterval(() => {
+            const emojis = ['❤️', '💖', '✨', '🌹', '💋'];
+            const e = emojis[Math.floor(Math.random()*emojis.length)];
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            burst(x, y, e, 1);
+        }, 200);
 
-document.body.appendChild(e);
-setTimeout(()=>e.remove(),4000);
-}
+        // Постоянен дъжд
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.innerHTML = '❤️';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = '-20px';
+            document.body.appendChild(p);
+            p.animate([{top: '-20px'}, {top: '110vh'}], {duration: 3000}).onfinish = () => p.remove();
+        }, 300);
+    }
+
+    // Помощна функция за експлозии
+    function burst(x, y, char, count) {
+        for(let i=0; i<count; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.innerHTML = char;
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            document.body.appendChild(p);
+            const a = Math.random() * Math.PI * 2;
+            const d = 50 + Math.random() * 100;
+            p.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${Math.cos(a)*d}px, ${Math.sin(a)*d}px) scale(0)`, opacity: 0 }
+            ], { duration: 1000 }).onfinish = () => p.remove();
+        }
+    }
+
+    // Ефект при докосване
+    document.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        burst(t.clientX, t.clientY, '✨', 2);
+    });
 </script>
-
 </body>
 </html>
